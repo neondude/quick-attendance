@@ -16,6 +16,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
+    "dexie": "^4.4.4",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },
