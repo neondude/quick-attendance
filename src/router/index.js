@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import StudentsView from "@/views/StudentsView.vue";
+import SettingsView from "@/views/SettingsView.vue";
+import ClassesSettingsView from "@/views/ClassesSettingsView.vue";
+import TagsSettingsView from "@/views/TagsSettingsView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_PATH || "/"),
@@ -7,7 +10,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "students",
+      name: "home",
       component: StudentsView,
     },
     {
@@ -19,6 +22,21 @@ const router = createRouter({
       path: "/students",
       name: "students",
       component: StudentsView,
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: SettingsView,
+    },
+    {
+      path: "/settings/classes",
+      name: "settings-classes",
+      component: ClassesSettingsView,
+    },
+    {
+      path: "/settings/tags",
+      name: "settings-tags",
+      component: TagsSettingsView,
     },
   ],
 });
