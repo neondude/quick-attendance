@@ -15,7 +15,6 @@ onMounted(async () => {
         <RouterLink class="btn px-3" to="/">Attendance</RouterLink>
         <RouterLink class="btn px-3" to="/students">Students</RouterLink>
         <RouterLink class="btn px-3" to="/settings">Settings</RouterLink>
-        <RouterLink class="btn px-3" to="/about">About</RouterLink>
       </div>
     </div>
   </nav>
