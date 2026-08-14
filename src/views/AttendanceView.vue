@@ -2,12 +2,14 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useClasses } from "@/composables/useClasses";
+import { useStudents } from "@/composables/useStudents";
 import DateScrollPicker from "@/components/DateScrollPicker.vue";
 import { db } from "@/db";
 
 const route = useRoute();
 const router = useRouter();
 const { classes } = useClasses();
+const { students } = useStudents();
 
 function toIsoDate(date) {
     const year = date.getFullYear();
@@ -53,8 +55,12 @@ function sanitizeQueryDate(queryDate) {
 
 const selectedDate = ref(sanitizeQueryDate(route.query.date));
 const attendanceRowsForSelectedDate = ref([]);
+const copiedClassId = ref(null);
 
 const displayDate = computed(() => formatDisplayDate(selectedDate.value));
+const studentNameById = computed(() =>
+    new Map(students.value.map((student) => [student.id, student.name]))
+);
 
 const attendanceCountsByClassId = computed(() => {
     const byClassId = new Map();
@@ -78,6 +84,55 @@ const attendanceCountsByClassId = computed(() => {
 
 function countsForClass(classId) {
     return attendanceCountsByClassId.value.get(classId) || { present: 0, absent: 0 };
+}
+
+function getClassAttendanceNames(classId) {
+    const presentNames = [];
+    const absentNames = [];
+
+    for (const row of attendanceRowsForSelectedDate.value) {
+        if (row.classId !== classId) {
+            continue;
+        }
+
+        const studentName = studentNameById.value.get(row.studentId);
+        if (!studentName) {
+            continue;
+        }
+
+        if (row.status === "absent") {
+            absentNames.push(studentName);
+        } else {
+            // Legacy rows without explicit status are considered present.
+            presentNames.push(studentName);
+        }
+    }
+
+    return { presentNames, absentNames };
+}
+
+function formatAttendanceClipboardText(classId) {
+    const { presentNames, absentNames } = getClassAttendanceNames(classId);
+    const presentSection = presentNames.length > 0 ? presentNames.join("\n") : "-";
+
+    if (absentNames.length === 0) {
+        return `Present:\n${presentSection}`;
+    }
+
+    const absentSection = absentNames.join("\n");
+    return `Present:\n${presentSection}\n\nAbsent:\n${absentSection}`;
+}
+
+async function handleCopyAttendance(classId) {
+    const text = formatAttendanceClipboardText(classId);
+    await navigator.clipboard.writeText(text);
+    copiedClassId.value = classId;
+
+    setTimeout(() => {
+        if (copiedClassId.value === classId) {
+            copiedClassId.value = null;
+        }
+    }, 1500);
 }
 
 async function loadAttendanceForSelectedDate() {
@@ -166,7 +221,16 @@ watch(
                         query: { date: selectedDate },
                     }"
                 >
-                    <div class="fw-semibold">{{ classItem.name }}</div>
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                        <div class="fw-semibold">{{ classItem.name }}</div>
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            @click.prevent.stop="handleCopyAttendance(classItem.id)"
+                        >
+                            {{ copiedClassId === classItem.id ? "Copied" : "Copy" }}
+                        </button>
+                    </div>
                     <div class="small text-body-secondary mt-1">{{ classItem.time }}</div>
                     <div class="d-flex flex-wrap gap-1 mt-2">
                         <span class="badge rounded-pill text-bg-success">
