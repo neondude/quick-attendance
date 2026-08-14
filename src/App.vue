@@ -2,19 +2,76 @@
 import { provide, ref, watch } from "vue";
 
 function createInitialState() {
+  /* schema for the state object 
+{
+  "tags": [
+    {
+      "id": "tag-mwf",
+      "name": "MWF"
+    },
+    {
+      "id": "tag-tts",
+      "name": "TTS"
+    },
+    {
+      "id": "tag-6am",
+      "name": "6 AM"
+    },
+    {
+      "id": "tag-7am",
+      "name": "7 AM"
+    }
+  ],
+  "classes": [
+    {
+      "id": "class-1",
+      "name": "Class 1"
+    },
+    {
+      "id": "class-2",
+      "name": "Class 2"
+    },
+    {
+      "id": "class-3",
+      "name": "Class 3"
+    }
+  ],
+  "people": [
+    {
+      "id": "person-001",
+      "name": "Arun",
+      "tagIds": ["tag-mwf", "tag-6am"]
+    },
+    {
+      "id": "person-002",
+      "name": "Priya",
+      "tagIds": ["tag-mwf", "tag-7am"]
+    },
+    {
+      "id": "person-003",
+      "name": "Rahul",
+      "tagIds": ["tag-tts", "tag-6am"]
+    }
+  ],
+  "attendance": {
+    "2026-08-14": {
+      "class-1": ["person-001"],
+      "class-2": ["person-002"]
+    }
+  }
+}
+  */
+  
   return {
-    count: 0,
+    tags: [],
+    classes: [],
+    people: [],
+    attendance: {}
   };
 }
 
 function appReducer(state, action) {
   switch (action.type) {
-    case "INCREMENT":
-      return { ...state, count: state.count + 1 };
-    case "DECREMENT":
-      return { ...state, count: state.count - 1 };
-    case "RESET":
-      return createInitialState();
     default:
       return state;
   }
