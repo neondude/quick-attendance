@@ -7,8 +7,7 @@ import router from "./router";
 import { seedDevelopmentData } from "./seedDevelopmentData";
 
 async function startApp() {
-	const url = new URL(window.location.href);
-	const shouldSeed = import.meta.env.DEV && url.searchParams.get("seed") === "1";
+	const shouldSeed = import.meta.env.DEV;
 
 	if (shouldSeed) {
 		try {
@@ -16,9 +15,6 @@ async function startApp() {
 		} catch (error) {
 			console.error("[seed] Failed to seed development data", error);
 		}
-
-		url.searchParams.delete("seed");
-		window.history.replaceState({}, "", url.toString());
 	}
 
 	createApp(App).use(router).mount("#app");
