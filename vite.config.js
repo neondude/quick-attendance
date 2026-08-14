@@ -12,6 +12,13 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || "/",
   plugins: [vue(), vueDevTools(), VitePWA()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
