@@ -39,6 +39,12 @@ const ATTENDANCE_ROWS = [
 ];
 
 export async function seedDevelopmentData() {
+  console.info("[seed] Dropping and recreating database before seeding...");
+
+  db.close();
+  await db.delete();
+  await db.open();
+
   console.info("[seed] Resetting students, tags, studentTags, classes, and attendance...");
 
   await db.transaction(
