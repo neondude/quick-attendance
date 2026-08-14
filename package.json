@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite --host",
+    "dev:seed": "vite --host --open /students?seed=1",
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest",
