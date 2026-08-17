@@ -47,6 +47,34 @@ export function useStudents() {
     return db.students.add(student);
   }
 
+  async function attachTagsToStudent(studentId, tagIds) {
+    const uniqueTagIds = [...new Set(tagIds)]
+      .map((tagId) => Number(tagId))
+      .filter((tagId) => Number.isInteger(tagId));
+
+    if (uniqueTagIds.length === 0) {
+      return;
+    }
+
+    await db.transaction("rw", db.studentTags, async () => {
+      for (const tagId of uniqueTagIds) {
+        const existingLink = await db.studentTags
+          .where("[studentId+tagId]")
+          .equals([studentId, tagId])
+          .first();
+
+        if (existingLink) {
+          continue;
+        }
+
+        await db.studentTags.add({
+          studentId,
+          tagId,
+        });
+      }
+    });
+  }
+
   async function updateStudent(id, changes) {
     return db.students.update(id, changes);
   }
@@ -63,6 +91,7 @@ export function useStudents() {
     students,
     studentsWithTags,
     addStudent,
+    attachTagsToStudent,
     updateStudent,
     deleteStudent,
     getStudent,
