@@ -259,10 +259,11 @@ async function handleAddStudent() {
 			</div>
 
 			<div v-else class="list-group">
-				<div
+				<RouterLink
 					v-for="student in filteredStudents"
 					:key="student.id"
-					class="list-group-item"
+					:to="{ name: 'student', params: { studentId: student.id } }"
+					class="list-group-item list-group-item-action"
 				>
 					<div class="fw-semibold">{{ student.name }}</div>
 					<div class="mt-2">
@@ -279,7 +280,7 @@ async function handleAddStudent() {
 							</span>
 						</div>
 					</div>
-				</div>
+				</RouterLink>
 			</div>
 		</div>
 	</div>

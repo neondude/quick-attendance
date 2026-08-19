@@ -5,6 +5,7 @@ import SettingsView from "@/views/SettingsView.vue";
 import ClassesSettingsView from "@/views/ClassesSettingsView.vue";
 import TagsSettingsView from "@/views/TagsSettingsView.vue";
 import AttendanceClassView from "@/views/AttendanceClassView.vue";
+import StudentView from "@/views/StudentView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_PATH || "/"),
@@ -29,6 +30,11 @@ const router = createRouter({
       path: "/students",
       name: "students",
       component: StudentsView,
+    },
+    {
+      path: "/students/:studentId",
+      name: "student",
+      component: StudentView,
     },
     {
       path: "/settings",
